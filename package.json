@@ -1,0 +1,22 @@
+{
+  "name": "auth",
+  "version": "1.0.50",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "test": "bun test",
+    "test:regression": "bun test src/tests/regression.test.ts",
+    "test:load": "bun src/tests/load.ts"
+  },
+  "dependencies": {
+    "@elysia/openapi": "^1.4.15",
+    "@elysiajs/jwt": "^1.4.2",
+    "drizzle-orm": "^0.45.2",
+    "elysia": "latest",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "drizzle-kit": "^0.31.10"
+  },
+  "module": "src/index.js"
+}

@@ -1,0 +1,156 @@
+@baseUrl = http://localhost:3000
+
+# ==========================================
+# 1. PUBLIC ROUTE & API DOCUMENTATION
+# ==========================================
+
+### Get Root Endpoint
+GET {{baseUrl}}/
+Accept: text/plain
+
+### Get Swagger Documentation (HTML UI)
+GET {{baseUrl}}/swagger
+Accept: text/html
+
+
+# ==========================================
+# 2. USER REGISTRATION
+# ==========================================
+
+### Register User (Role: user)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "role": "user"
+}
+
+### Register User (Role: pro)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "pro@example.com",
+  "password": "password123",
+  "role": "pro"
+}
+
+### Register User (Role: admin)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "password123",
+  "role": "admin"
+}
+
+
+# ==========================================
+# 3. LOGIN & TOKEN EXTRACTION
+# ==========================================
+
+### Login User (Role: user)
+# @name loginUser
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+### Login Pro (Role: pro)
+# @name loginPro
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "pro@example.com",
+  "password": "password123"
+}
+
+### Login Admin (Role: admin)
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+
+
+# ==========================================
+# 4. CAPTURING THE TOKENS
+# ==========================================
+@userToken = {{loginUser.response.body.token}}
+@proToken = {{loginPro.response.body.token}}
+@adminToken = {{loginAdmin.response.body.token}}
+
+
+# ==========================================
+# 5. TESTING PROTECTED ROUTES (NO TOKEN)
+# ==========================================
+
+### User Protected Route (Expects 401 Unauthorized)
+GET {{baseUrl}}/protected/user
+
+### Pro Protected Route (Expects 401 Unauthorized)
+GET {{baseUrl}}/protected/pro
+
+### Admin Protected Route (Expects 401 Unauthorized)
+GET {{baseUrl}}/protected/admin
+
+
+# ==========================================
+# 6. TESTING PROTECTED ROUTES (USER TOKEN)
+# ==========================================
+
+### Access /protected/user with User Token (Expects 200 OK)
+GET {{baseUrl}}/protected/user
+Authorization: Bearer {{userToken}}
+
+### Access /protected/pro with User Token (Expects 403 Forbidden)
+GET {{baseUrl}}/protected/pro
+Authorization: Bearer {{userToken}}
+
+### Access /protected/admin with User Token (Expects 403 Forbidden)
+GET {{baseUrl}}/protected/admin
+Authorization: Bearer {{userToken}}
+
+
+# ==========================================
+# 7. TESTING PROTECTED ROUTES (PRO TOKEN)
+# ==========================================
+
+### Access /protected/user with Pro Token (Expects 200 OK)
+GET {{baseUrl}}/protected/user
+Authorization: Bearer {{proToken}}
+
+### Access /protected/pro with Pro Token (Expects 200 OK)
+GET {{baseUrl}}/protected/pro
+Authorization: Bearer {{proToken}}
+
+### Access /protected/admin with Pro Token (Expects 403 Forbidden)
+GET {{baseUrl}}/protected/admin
+Authorization: Bearer {{proToken}}
+
+
+# ==========================================
+# 8. TESTING PROTECTED ROUTES (ADMIN TOKEN)
+# ==========================================
+
+### Access /protected/user with Admin Token (Expects 200 OK)
+GET {{baseUrl}}/protected/user
+Authorization: Bearer {{adminToken}}
+
+### Access /protected/pro with Admin Token (Expects 200 OK)
+GET {{baseUrl}}/protected/pro
+Authorization: Bearer {{adminToken}}
+
+### Access /protected/admin with Admin Token (Expects 200 OK)
+GET {{baseUrl}}/protected/admin
+Authorization: Bearer {{adminToken}}
